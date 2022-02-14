@@ -1,0 +1,65 @@
+apply plugin: 'application'
+
+description = '@projectName@-api'
+dependencies {
+
+    compile ("com.alibaba:fastjson:${fastJsonVersion}")
+// https://mvnrepository.com/artifact/com.alibaba/druid
+//    compile group: 'com.alibaba', name: 'druid', version: '1.2.1'
+
+//    compile project(':dream-common')
+    compile project(':@projectName@-management:@projectName@-common')
+
+    compile group: 'com.alibaba', name: 'easyexcel', version: '2.2.6'
+    compile 'commons-net:commons-net:3.6'
+}
+
+
+sourceSets {
+    main {
+        resources {
+            srcDirs("src/main/resource", "../@projectName@-common/src/resources")
+        }
+    }
+}
+
+
+jar {
+    enabled(true)
+    manifest {
+        attributes(
+                "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Class-Path": '.config/'
+        )
+    }
+//    exclude('config/')
+}
+
+
+
+task clearTarget(type:Delete){
+    delete 'build/target'
+    delete 'out'
+}
+
+task release(type: Copy,dependsOn: [clearTarget,build]) {
+    from('build/libs') {
+        include '*.jar'
+        exclude '*-sources.jar'
+    }
+//    from('src/main/resources') {
+//        include 'config/*'
+//    }
+    into ('build/target')
+
+    into('bin') {
+        from 'shell'
+    }
+}
+
+task dist(type: Zip,dependsOn: [release]) {
+    from ('build/target/') {
+    }
+}
+

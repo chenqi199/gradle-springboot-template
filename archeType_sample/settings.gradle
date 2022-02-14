@@ -1,0 +1,12 @@
+rootProject.name = '@projectName@_sample-v3'
+
+
+include '@projectName@-management'
+include '@projectName@-management:@projectName@-common'
+include '@projectName@-management:@projectName@-admin'
+include '@projectName@-management:@projectName@-api'
+include '@projectName@-management:@projectName@-interface'
+
+
+
+

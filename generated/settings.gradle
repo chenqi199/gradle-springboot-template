@@ -1,0 +1,12 @@
+rootProject.name = 'heterogeneity_sample-v3'
+
+
+include 'heterogeneity-management'
+include 'heterogeneity-management:heterogeneity-common'
+include 'heterogeneity-management:heterogeneity-admin'
+include 'heterogeneity-management:heterogeneity-api'
+include 'heterogeneity-management:heterogeneity-interface'
+
+
+
+

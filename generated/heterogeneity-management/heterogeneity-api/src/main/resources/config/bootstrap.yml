@@ -1,0 +1,32 @@
+spring :
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  application :
+    name : heterogeneity-api
+
+
+server :
+  port : 9998
+  servlet:
+    context-path: /
+
+eureka :
+  client :
+    serviceUrl :
+     defaultZone : ${eureka.zone}
+    registerWithEureka : ${registerWithEureka:false}
+
+  instance :
+    preferIpAddress : true
+
+
+
+#logging configuration
+logging :
+  config : classpath:config/logback-spring.xml
+
+
+feign :
+  request :
+    headers : token,Authorization

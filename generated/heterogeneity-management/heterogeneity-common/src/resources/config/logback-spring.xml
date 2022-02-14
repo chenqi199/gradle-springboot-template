@@ -1,0 +1,144 @@
+<configuration scan="true" scanPeriod="10 seconds" debug="true">
+	<springProperty scope="context" name="PROJECT_NAME" source="spring.application.name"/>
+	<springProperty scope="context" name="ip" source="spring.cloud.client.ip-address" />
+
+	<contextName>${PROJECT_NAME}</contextName>
+
+
+	<property name="basePath" value="./logs"/>
+	<property name="log.dir" value="${basePath}/${PROJECT_NAME}"/>
+
+	<property name="max.file.size" value="300MB"/>
+	<property name="max.history" value="5"/>
+	<property name="max.total.size" value="10GB"/>
+	<property name="rolling.policy.file.name.pattern" value="yyyy-MM-dd"/>
+	<property name="conversion.pattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] ${ip} ${PROJECT_NAME} %highlight(%-5level) [%yellow(%X{X-B3-TraceId}),%green(%X{X-B3-SpanId}),%blue(%X{X-B3-ParentSpanId})] %yellow(%thread) %green(%logger{30}.%M[%line]) %msg%n"/>
+	<property name="conversion.patternNoColor" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] ${ip} ${PROJECT_NAME} %-5level [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-B3-ParentSpanId}] %thread  %logger{30}.%M[%line] %msg%n"/>
+	<property name="root.level" value="INFO"/>
+
+
+
+
+	<!-- 本项目的名字 -->
+   
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${conversion.pattern}</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- root file 日志 -->
+	<appender name="root-file-error"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/error.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<maxFileSize>${max.file.size}</maxFileSize>
+			<maxHistory>${max.history}</maxHistory>
+			<totalSizeCap>${max.total.size}</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>{${conversion.patternNoColor}}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="root-file-warn"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/warn.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/warn.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<maxFileSize>${max.file.size}</maxFileSize>
+			<maxHistory>${max.history}</maxHistory>
+			<totalSizeCap>${max.total.size}</totalSizeCap>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>{${conversion.patternNoColor}}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>warn</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="root-file-info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/info.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<maxFileSize>${max.file.size}</maxFileSize>
+			<maxHistory>${max.history}</maxHistory>
+			<totalSizeCap>${max.total.size}</totalSizeCap>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>{${conversion.patternNoColor}}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="root-file-debug"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/debug.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<maxFileSize>${max.file.size}</maxFileSize>
+			<maxHistory>${max.history}</maxHistory>
+			<totalSizeCap>${max.total.size}</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>{${conversion.patternNoColor}}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>debug</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+
+	<appender name="root-file-request"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log.dir}/request.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${log.dir}/request.%d{${rolling.policy.file.name.pattern}}.%i.log.zip</fileNamePattern>
+			<maxFileSize>${max.file.size}</maxFileSize>
+			<maxHistory>${max.history}</maxHistory>
+			<totalSizeCap>${max.total.size}</totalSizeCap>
+		</rollingPolicy>
+		<encoder>
+			<pattern>{${conversion.patternNoColor}}</pattern>
+		</encoder>
+	</appender>
+
+
+	<logger name="com.sfa.common.service.imp.SfaRequestLogServiceImpl" level="${root.level}">
+		<appender-ref ref="root-file-request"/>
+	</logger>
+<!--	<logger name="com.netflix.loadbalancer.LoadBalancerContext" level="DEBUG" >-->
+<!--		<appender-ref ref="root-file-request"/>-->
+<!--		<appender-ref ref="console"/>-->
+<!--	</logger>-->
+
+	<root level="${root.level}">
+
+		<springProfile name=" dev, test,uat,  pre, pro">
+			<appender-ref ref="root-file-error"/>
+			<appender-ref ref="root-file-warn"/>
+			<appender-ref ref="root-file-info"/>
+		</springProfile>
+		<springProfile name="dev, test">
+			<appender-ref ref="console" />
+		</springProfile>
+
+
+	</root>
+
+</configuration>

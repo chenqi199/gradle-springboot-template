@@ -1,0 +1,19 @@
+apply plugin: 'application'
+description = '  @projectName@ query '
+dependencies {
+    compile project(":@projectName@-management:@projectName@-common")
+    compile project(":@projectName@-management:@projectName@-api")
+    compile project(":@projectName@-management:@projectName@-admin")
+}
+mainClassName = ''
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Class-Path": '.config/'
+        )
+    }
+    exclude('config/')
+}

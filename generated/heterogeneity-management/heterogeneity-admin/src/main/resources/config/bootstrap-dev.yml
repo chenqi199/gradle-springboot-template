@@ -1,0 +1,32 @@
+spring :
+  application :
+    name : Zheterogeneity-ADMIN
+    index: '${random.long}'
+  cloud:
+    config:
+      uri:
+      discovery:
+        enabled: false
+        service-id:
+      username:
+      password:
+    bus:
+      trace:
+        enable: true
+
+server :
+  port : 9998
+
+
+eureka :
+  client :
+    serviceUrl :
+
+    registerWithEureka : ${registerWithEureka:false}
+    enabled: false
+  instance :
+    preferIpAddress : true
+
+#logging configuration
+logging :
+  config : classpath:config/logback-spring.xml

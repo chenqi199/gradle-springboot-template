@@ -1,0 +1,127 @@
+// 构建脚本
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+        springBootManagementVersion = '1.0.10.RELEASE'
+        springCloudVersion = 'Greenwich.RELEASE'
+    }
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+
+        mavenLocal()
+        mavenCentral()
+//        maven { url 'https://repo.spring.io/snapshot' }
+//        maven { url 'https://repo.spring.io/milestone' }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springBootManagementVersion}")
+    }
+}
+
+// 所有项目公用
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    group = '@projectName@'
+    version = '1.0-SNAPSHOT'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+
+}
+
+// 所有子项目通用
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+//    apply plugin: 'war'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+        springCloudVersion = 'Greenwich.SR6'
+        fastJsonVersion = '1.2.7'
+        mybatisPlusVersion = '3.4.0'
+        commonsLangVersion = '3.5'
+
+    }
+    mainClassName = ''
+//    jar {
+//        enabled = false
+//    }
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        mavenLocal()
+
+//        mavenCentral()
+//        maven { url 'https://repo.spring.io/snapshot' }
+//        maven { url 'https://repo.spring.io/milestone' }
+    }
+    dependencies {
+        compile(
+                'org.springframework.boot:spring-boot-starter-web',
+                'org.springframework.boot:spring-boot-starter-tomcat',
+                'org.springframework.boot:spring-boot-starter-actuator',
+                'org.springframework.cloud:spring-cloud-starter',
+                'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client',
+                'com.google.guava:guava:23.0',
+                'org.projectlombok:lombok',
+                'org.slf4j:slf4j-api'
+
+        )
+        testCompile(
+                "org.springframework.boot:spring-boot-starter-test",
+                "org.springframework:spring-test",
+                "junit:junit:4.12"
+        )
+        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha1'
+
+        annotationProcessor 'org.projectlombok:lombok:1.18.4'
+
+//        providedCompile(group: 'org.projectlombok', name: 'lombok', version: '1.18.12')
+
+    }
+    dependencyManagement {
+        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+        imports { mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}" }
+    }
+
+
+    jar {
+        from('src/main/resources') {
+            include '**/*.*'
+        }
+    }
+
+    //打包源代码
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    artifacts {
+        archives jar
+        archives sourcesJar
+    }
+
+
+    task cleanOut(type: Delete) {
+        delete "${projectDir}/build"
+        delete "${projectDir}/out"
+    }
+
+
+}
+

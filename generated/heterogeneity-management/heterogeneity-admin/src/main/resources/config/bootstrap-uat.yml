@@ -1,0 +1,27 @@
+spring :
+  application :
+    name : heterogeneity-ADMIN
+    index: '${random.long}'
+  cloud:
+    config:
+#      uri: http://47.93.234.167:8080/
+      discovery:
+        enabled: true
+        service-id: springcloud-config-server
+      username:
+      password:
+    bus:
+      trace:
+        enable: true
+server :
+  port : 9998
+
+
+eureka :
+  client :
+    serviceUrl :
+
+    registerWithEureka : ${registerWithEureka:false}
+#logging configuration
+logging :
+  config : classpath:config/logback-spring.xml

@@ -1,0 +1,71 @@
+apply plugin: 'application'
+
+description = ' @projectName@-common'
+dependencies {
+
+    compile ("com.alibaba:fastjson:${fastJsonVersion}")
+// https://mvnrepository.com/artifact/com.alibaba/druid
+//    compile group: 'com.alibaba', name: 'druid', version: '1.2.1'
+
+
+    compile ("com.alibaba:fastjson:${fastJsonVersion}")
+    implementation ("org.springframework.boot:spring-boot-starter-amqp")
+    compile ("org.apache.commons:commons-lang3:${commonsLangVersion}")
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.7.0'
+    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version: '1.3.2'
+
+    compile group: 'log4j', name: 'log4j', version: '1.2.8'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
+    compile group: 'com.github.pagehelper', name: 'pagehelper', version: '5.1.4'
+    implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.5.13'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '2.0.0-alpha1'
+    compile 'net.logstash.logback:logstash-logback-encoder:6.3'
+    compile 'com.baomidou:mybatis-plus-boot-starter:3.5.1'
+    compile 'com.baomidou:mybatis-plus-generator:3.5.1'
+    compile 'org.apache.velocity:velocity-engine-core:2.3'
+
+}
+
+
+
+jar {
+    enabled(true)
+    manifest {
+        attributes(
+                "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Class-Path": '.config/'
+        )
+    }
+//    exclude('config/')
+}
+
+
+
+task clearTarget(type:Delete){
+    delete 'build/target'
+    delete 'out'
+}
+
+task release(type: Copy,dependsOn: [clearTarget,build]) {
+    from('build/libs') {
+        include '*.jar'
+        exclude '*-sources.jar'
+    }
+//    from('src/main/resources') {
+//        include 'config/*'
+//    }
+    into ('build/target')
+
+    into('bin') {
+        from 'shell'
+    }
+}
+
+task dist(type: Zip,dependsOn: [release]) {
+    from ('build/target/') {
+    }
+}
+

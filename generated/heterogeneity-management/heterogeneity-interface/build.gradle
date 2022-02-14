@@ -1,0 +1,51 @@
+apply plugin: 'application'
+
+description = 'heterogeneity-interface '
+dependencies {
+
+    compile ("com.alibaba:fastjson:${fastJsonVersion}")
+// https://mvnrepository.com/artifact/com.alibaba/druid
+    compile project(':heterogeneity-management:heterogeneity-common')
+    compile group: 'com.alibaba', name: 'easyexcel', version: '2.2.6'
+    compile 'commons-net:commons-net:3.6'
+}
+
+
+jar {
+    enabled(true)
+    manifest {
+        attributes(
+                "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Class-Path": '.config/'
+        )
+    }
+//    exclude('config/')
+}
+
+
+
+task clearTarget(type:Delete){
+    delete 'build/target'
+    delete 'out'
+}
+
+task release(type: Copy,dependsOn: [clearTarget,build]) {
+    from('build/libs') {
+        include '*.jar'
+        exclude '*-sources.jar'
+    }
+//    from('src/main/resources') {
+//        include 'config/*'
+//    }
+    into ('build/target')
+
+    into('bin') {
+        from 'shell'
+    }
+}
+task dist(type: Zip,dependsOn: [release]) {
+    from ('build/target/') {
+    }
+}
+

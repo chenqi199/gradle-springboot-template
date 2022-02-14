@@ -1,0 +1,19 @@
+apply plugin: 'application'
+description = '  heterogeneity query '
+dependencies {
+    compile project(":heterogeneity-management:heterogeneity-common")
+    compile project(":heterogeneity-management:heterogeneity-api")
+    compile project(":heterogeneity-management:heterogeneity-admin")
+}
+mainClassName = ''
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "Gradle",
+                "Implementation-Version": "${version}",
+                "Class-Path": '.config/'
+        )
+    }
+    exclude('config/')
+}
